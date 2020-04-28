@@ -9,10 +9,11 @@ And since this is the beginning of the project. The efforts must start with gett
 
 * I followed the setup for the Linux ROS integration
 * I am also running Ubuntu 16.04 (will eventually do it with 18.04), but for now, I followed this link in order to get the full ROS desktop environment installed on my PC: http://wiki.ros.org/kinetic/Installation/Ubuntu
+* The eventual goal is to (possibly using python ros libraries) is to transcribe it to since both libraries utilize the python language.
     
 (3) currently working with python-openimu to get the python driver for the imu to work (still waiting on parts to make a small power supply to turn on the device (I will provide instructions for how I am approaching the problem, as well as the links that I use in order to get the device to work)
 
-(4) The eventual goal is to (possibly using python ros libraries) is to transcribe it to python since both libraries utilize that language.
+* python-openimu (can be installed with pip), but I am following: https://github.com/Aceinna/python-openimu
 
 (5) Once I have completed the tasks of getting the devices to work, preliminary results need to be provided. For example, I will show the IMU according to it's calculated values for roll, pitch, yaw. Utilizing VTK, I can represent the IMU simply as a vtkCubeSource (polydata); with vtkTransform and vtkTransformPolyDataFilter, I can apply the roll, pitch, and yaw values to that transform and show the IMU's placement in real-time. Thus providing a verification that it is not only working, but getting the correct transform values.
 
