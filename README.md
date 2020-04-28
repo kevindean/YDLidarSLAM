@@ -3,7 +3,7 @@ plan on utilizing openIMU300RI and YDLidar G2 to perform SLAM operations... this
 
 And since this is the beginning of the project. The efforts must start with getting each device to work before properly integrating them together. TODO list:
 
-(1) acquire imu, acquire lidar
+(1) acquire imu, acquire lidar (I will provide a list of all components used, pictures of setup, and a list of instructions once I have been able to do the following...)
 
 (2) get an understanding of how to implement ROS with YDLidar, they have a very nice introduction that was easy to follow, the link I followed is here: http://www.ydlidar.com/Public/upload/files/2020-04-13/YDLIDAR-X4-USER%20Manual.pdf
     * I followed the setup for the Linux ROS integration
