@@ -6,9 +6,9 @@ And since this is the beginning of the project. The efforts must start with gett
 (1) acquire imu, acquire lidar (I will provide a list of all components used, pictures of setup, and a list of instructions once I have been able to do the following...)
 
 (2) get an understanding of how to implement ROS with YDLidar, they have a very nice introduction that was easy to follow, the link I followed is here: http://www.ydlidar.com/Public/upload/files/2020-04-13/YDLIDAR-X4-USER%20Manual.pdf
-    * I followed the setup for the Linux ROS integration
-    * I am also running Ubuntu 16.04 (will eventually do it with 18.04), but for now, I followed this link in order to get the 
-      full ROS desktop environment installed on my PC: http://wiki.ros.org/kinetic/Installation/Ubuntu
+
+* I followed the setup for the Linux ROS integration
+* I am also running Ubuntu 16.04 (will eventually do it with 18.04), but for now, I followed this link in order to get the full ROS desktop environment installed on my PC: http://wiki.ros.org/kinetic/Installation/Ubuntu
     
 (3) currently working with python-openimu to get the python driver for the imu to work (still waiting on parts to make a small power supply to turn on the device (I will provide instructions for how I am approaching the problem, as well as the links that I use in order to get the device to work)
 
