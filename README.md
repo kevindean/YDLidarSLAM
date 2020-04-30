@@ -12,12 +12,13 @@ And since this is the beginning of the project. The efforts must start with gett
 * The eventual goal is to (possibly using python ros libraries) is to transcribe it to since both libraries utilize the python language.
     
 (3) currently working with python-openimu to get the python driver for the imu to work (still waiting on parts to make a small power supply to turn on the device (I will provide instructions for how I am approaching the problem, as well as the links that I use in order to get the device to work)
+* Update, waiting on external parts before I can get it working to visualize angles, etc)
 
 * python-openimu (can be installed with pip; meaning -> pip install python-openimu), but I am following: https://github.com/Aceinna/python-openimu
 
 (5) Once I have completed the tasks of getting the devices to work, preliminary results need to be provided. For example, I will show the IMU according to it's calculated values for roll, pitch, yaw. Utilizing VTK, I can represent the IMU simply as a vtkCubeSource (polydata); with vtkTransform and vtkTransformPolyDataFilter, I can apply the roll, pitch, and yaw values to that transform and show the IMU's placement in real-time. Thus providing a verification that it is not only working, but getting the correct transform values.
 
-(6) the YDLidar shows results in RViz currently; but once again, I would need to show it utilized in python (picture of the lidar working in RViz has already been accomplished - an image is provided)
+(6) the YDLidar shows results in RViz currently; but once again, I would need to show it utilized in python (picture of the lidar working in RViz has already been accomplished - a video is provided; i use VLC to view mp4(s), ubuntu -> sudo apt-get install vlc)
 
 (7) The next step will be to integrate the two into one single output. It has to be shown that they can work together properly before a simultaneous mapping and localization can be performed. The YDLidar G2 is a single laser triangulation formmula that visualizes 360 degrees. Since it is only a 2 Dimensional representation, in order for a SLAM reconstruction to be accomplished, the IMU is need to change the angle of the point cloud. Thus showing the point cloud transforming in real-time (just a single cloud, not a SLAM)
 
