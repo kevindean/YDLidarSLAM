@@ -14,7 +14,7 @@ And since this is the beginning of the project. The efforts must start with gett
 (3) currently working with python-openimu to get the python driver for the imu to work (still waiting on parts to make a small power supply to turn on the device (I will provide instructions for how I am approaching the problem, as well as the links that I use in order to get the device to work)
 * Update, waiting on external parts before I can get it working to visualize angles, etc)
 
-* python-openimu (can be installed with pip; meaning -> pip install python-openimu), but I am following: https://github.com/Aceinna/python-openimu
+* python-openimu (can be installed with pip; meaning -> pip install python-openimu), but I am following: https://github.com/Aceinna/python-openimu (currently waiting on power supply to turn on IMU)
 
 (5) Once I have completed the tasks of getting the devices to work, preliminary results need to be provided. For example, I will show the IMU according to it's calculated values for roll, pitch, yaw. Utilizing VTK, I can represent the IMU simply as a vtkCubeSource (polydata); with vtkTransform and vtkTransformPolyDataFilter, I can apply the roll, pitch, and yaw values to that transform and show the IMU's placement in real-time. Thus providing a verification that it is not only working, but getting the correct transform values.
 
