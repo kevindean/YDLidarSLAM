@@ -3,11 +3,9 @@
 # present from the lidar) the latest polydata to simply add it to the render window. If I were to include the YDLidar in the
 # same file as the executable function from VTK, it messes up the address acuqisition from the lidar.
 
-import io
 import socket
-import sys
+import os, sys
 import numpy as np
-import random
 import time
 import ydlidar
 
