@@ -1,3 +1,8 @@
+# the current plan is to display the point cloud within a VTK render window. In order to do this, I would like to publish
+# the point array (coming from the lidar) across a socket in order to use a callback function to acquire (if new data is
+# present from the lidar) the latest polydata to simply add it to the render window. If I were to include the YDLidar in the
+# same file as the executable function from VTK, it messes up the address acuqisition from the lidar.
+
 import io
 import socket
 import sys
@@ -6,6 +11,7 @@ import random
 import time
 import ydlidar
 
+# instantiate all variables associated with the G2B model (YdLidar)
 ydlidar.os_init()
 ports = ydlidar.lidarPortList()
 port = "/dev/ydlidar"
@@ -22,7 +28,7 @@ laser.setlidaropt(ydlidar.LidarPropSampleRate, 5)
 laser.setlidaropt(ydlidar.LidarPropFixedResolution, True)
 laser.setlidaropt(ydlidar.LidarPropInverted, True)
 laser.setlidaropt(ydlidar.LidarPropSingleChannel, False)
-laser.setlidaropt(ydlidar.LidarPropIntenstiy, True) # required for G2B
+laser.setlidaropt(ydlidar.LidarPropIntenstiy, True) # required for G2B, otherwise the laser will NOT turn on
 laser.setlidaropt(ydlidar.LidarPropMaxAngle, 180.0)
 laser.setlidaropt(ydlidar.LidarPropMinAngle, -180.0)
     
