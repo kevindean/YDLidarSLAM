@@ -1,3 +1,6 @@
+# still working on some kinks (some issues with the the render window closing - working on that currently), but this 
+# will be the format that I use from now on in order to acquire the callback for the lidar and the IMU in order to get in one.
+
 import os, sys
 import socket
 import numpy as np
