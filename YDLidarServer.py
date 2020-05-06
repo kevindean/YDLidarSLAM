@@ -28,7 +28,7 @@ class VTKPointCloud():
         self.Write()
 
 class HandleVTKCloud():
-    def __init__(self, renderer, server='localhost', address=10000, maxDelay=1000):
+    def __init__(self, renderer, server='localhost', address=10000, maxDelay=1000, maxNumClouds=1000):
         self.renderer = renderer
         
         # create tcp/ip socket
@@ -45,12 +45,19 @@ class HandleVTKCloud():
         self.count = 0
         self.delay = 0
         self.maxDelay = maxDelay
+        self.maxNumClouds = maxNumClouds
         
         # make a pointer to the data
         self.data_recvd = None
         
     def execute(self, obj, event):
         self.count += 1
+        if self.count == self.maxNumClouds - 1:
+            print("Closing App")
+            self.sock.close()
+            obj.GetRenderWindow().Finalize()
+            obj.TerminateApp()
+        
         print(sys.stderr, "Num Cloud %d" % self.count)
         pointCloud = VTKPointCloud()
         self.renderer.AddActor(pointCloud.vtkActor)
@@ -85,15 +92,15 @@ class HandleVTKCloud():
             # clean up the connection
             connection.close()
         
-        self.delay += 1
-        print(self.delay)
-        
-        if self.delay == self.maxDelay:
-            print(sys.stderr, "No Data has been acquired,\n \
-                closing socket and exiting program!")
-            self.connection.close()
-            self.sock.close()
-            sys.exit()
+#        self.delay += 1
+#        print(self.delay)
+#        
+#        if self.delay == self.maxDelay:
+#            print(sys.stderr, "No Data has been acquired,\n \
+#                closing socket and exiting program!")
+#            self.connection.close()
+#            self.sock.close()
+#            sys.exit()
 
 class KeyBoardInterrupt(vtk.vtkInteractorStyleTrackballCamera):
     def __init__(self, HandleCloud):
