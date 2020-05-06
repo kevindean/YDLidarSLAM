@@ -16,6 +16,8 @@ class VTKPointCloud():
         # set up vtk polydata mapper
         mapper = vtk.vtkPolyDataMapper()
         mapper.SetInputData(self.vtkVertex.GetOutput())
+        mapper.SetColorModeToDefault()
+        mapper.SetScalarRange(0, 255)
         mapper.SetScalarVisibility(True)
         
         self.vtkActor = vtk.vtkActor()
