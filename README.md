@@ -20,7 +20,7 @@ And since this is the beginning of the project. The efforts must start with gett
 
 (6) the YDLidar shows results in RViz currently; but once again, I would need to show it utilized in python (picture of the lidar working in RViz has already been accomplished - a video is provided; i use VLC to view mp4(s), ubuntu -> sudo apt-get install vlc)
 
-Shown in VTK Render Window (display of calling Lidar from python - mp4 shows a video of this happening)
+Shown in VTK Render Window (display of calling Lidar from python)
 ![VTK Render Window](https://github.com/kevindean/YDLidarSLAM/blob/1.1/Screenshot%20from%202020-05-05%2021-37-45.png)
 
 (7) The next step will be to integrate the two into one single output. It has to be shown that they can work together properly before a simultaneous mapping and localization can be performed. The YDLidar G2 is a single laser triangulation formmula that visualizes 360 degrees. Since it is only a 2 Dimensional representation, in order for a SLAM reconstruction to be accomplished, the IMU is need to change the angle of the point cloud. Thus showing the point cloud transforming in real-time (just a single cloud, not a SLAM)
