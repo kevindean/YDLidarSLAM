@@ -72,9 +72,10 @@ def main(maxScans=1000, serial_port="/dev/ydlidar", address='localhost', port=10
                 except (TimeoutError, ConnectionRefusedError) as e:
                     print("Terminatingt\nClosing Socket")
                     sock.close()
+                    
                     print("Turning Off Laser")
-                    Laser.laser.turnOff()
-                    Laser.laser.disconnecting()
+                    Laser.StopScanning()
+                    
                     sys.exit("Exiting Program")
                 
                 try:
