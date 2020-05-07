@@ -24,14 +24,21 @@ class VTKPointCloud():
         self.vtkActor.GetProperty().SetPointSize(3)
         self.vtkActor.SetMapper(mapper)
     
-    def WriteData(self, filename_str):
+    def WriteData(self, filename_str, data):
         self.Writer.SetFileName(filename_str)
-        self.Writer.SetInputData(self.vtkPolyData)
-        self.Write()
+        self.Writer.SetInputData(data)
+        self.Writer.Write()
 
 class HandleVTKCloud():
-    def __init__(self, renderer, server='localhost', address=10000, maxDelay=1000, maxNumClouds=1000):
+    def __init__(self, renderer, debug=False, server='localhost', address=10000, maxDelay=1000, maxNumClouds=1000):
         self.renderer = renderer
+        
+        self.debug = debug
+        if self.debug == True:
+            if os.path.exists("./data") == False:
+                os.makedirs("./data")
+            else:
+                print(sys.stderr, "Path Already Exists")
         
         # create tcp/ip socket
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -87,6 +94,10 @@ class HandleVTKCloud():
                 pointCloud.vtkVertex.SetInputData(pointCloud.vtkPolyData)
                 pointCloud.vtkVertex.Update()
                 
+                if self.debug == True:
+                    pointCloud.WriteData("./data/socket_cloud_{0}.vtp".format(str(self.count).zfill(4)), \
+                        pointCloud.vtkVertex.GetOutput())
+                
                 obj.GetRenderWindow().Render()
                 self.renderer.RemoveActor(pointCloud.vtkActor)
         
@@ -132,7 +143,7 @@ def main():
     renderWindowInteractor.SetRenderWindow(renderWindow)
     renderWindowInteractor.Initialize()
     
-    handleCloud = HandleVTKCloud(renderer)
+    handleCloud = HandleVTKCloud(renderer, debug=False)
     style = KeyBoardInterrupt(handleCloud)
     renderWindowInteractor.SetInteractorStyle(style)
     renderWindowInteractor.AddObserver('TimerEvent', handleCloud.execute)
