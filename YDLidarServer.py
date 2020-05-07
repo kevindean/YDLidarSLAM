@@ -51,21 +51,20 @@ class HandleVTKCloud():
         self.sock.listen(1)
         
         # tracker(s)
-        self.count = 0
+        self.cloudCount = 0
         self.maxNumClouds = maxNumClouds
         
         # make a pointer to the data
         self.data_recvd = None
         
     def execute(self, obj, event):
-        self.count += 1
-        if self.count == self.maxNumClouds - 1:
+        if self.cloudCount == self.maxNumClouds - 1:
             print("Closing App")
             self.sock.close()
             obj.GetRenderWindow().Finalize()
             obj.TerminateApp()
         
-        print(sys.stderr, "Num Cloud %d" % self.count)
+        print(sys.stderr, "Num Cloud %d" % self.cloudCount)
         pointCloud = VTKPointCloud()
         self.renderer.AddActor(pointCloud.vtkActor)
         
@@ -77,6 +76,7 @@ class HandleVTKCloud():
             self.data_recvd = connection.recv(16384)
             
             if self.data_recvd:
+                self.cloudCount += 1
                 data = np.frombuffer(self.data_recvd).reshape(505, 4)
                 
                 intensity_scalars = vtk.vtkDoubleArray()
@@ -93,7 +93,7 @@ class HandleVTKCloud():
                 pointCloud.vtkVertex.Update()
                 
                 if self.debug == True:
-                    pointCloud.WriteData("./data/socket_cloud_{0}.vtp".format(str(self.count).zfill(4)), \
+                    pointCloud.WriteData("./data/socket_cloud_{0}.vtp".format(str(self.cloudCount).zfill(4)), \
                         pointCloud.vtkVertex.GetOutput())
                 
                 obj.GetRenderWindow().Render()
@@ -102,6 +102,7 @@ class HandleVTKCloud():
         finally:
             # clean up the connection
             connection.close()
+
 
 class KeyBoardInterrupt(vtk.vtkInteractorStyleTrackballCamera):
     def __init__(self, HandleCloud):
