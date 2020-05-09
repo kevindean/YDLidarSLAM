@@ -7,6 +7,7 @@ accel_offset = [-1.477229773462783, 0.3782006472491909, -0.3691974110032362]
 gyro_offset = [-169.23784466019418, 25.974271844660194, -31.406990291262137]
 mag_offset = [38.42743042071198, 6.023100323624595, -60.78293203883496]
 
+
 class IMU():
     def __init__(self, xLength=10, yLength=10, zLength=1):
         self.imu = vtk.vtkCubeSource()
@@ -75,20 +76,10 @@ class HandleIMUSerialData():
                     mag[0][1] /= mag_offset[1]
                     mag[0][2] /= mag_offset[2]
                     
-                    self.pitch = np.arctan2(accel[0][1], np.sqrt(accel[0][0]**2 + accel[0][2]**2))
-                    self.roll = np.arctan2(accel[0][0], np.sqrt(accel[0][1]**2 + accel[0][2]**2))
-                    
-                    yh = mag[0][1]*np.cos(self.roll) - mag[0][2]*np.sin(self.roll)
-                    xh = mag[0][0]*np.cos(self.pitch) + \
-                         mag[0][1]*np.sin(self.roll)*np.sin(self.pitch) + \
-                         mag[0][2]*np.cos(self.pitch)*np.sin(self.roll)
-                    
-                    self.yaw = np.arctan2(yh, xh)
-                    
-                    self.roll *= 57.3
-                    self.pitch *= 57.3
-                    self.yaw *= 57.3
-                    
+                    self.pitch = 180 * np.arctan2(accel[0][1], np.sqrt(accel[0][0]**2 + accel[0][2]**2)) / np.pi
+                    self.roll = 180 * np.arctan2(accel[0][0], np.sqrt(accel[0][1]**2 + accel[0][2]**2)) / np.pi
+                    self.yaw = 180 * np.arctan2(-mag[0][1], mag[0][0]) / np.pi
+                                        
                     print("Roll: {0}, Pitch: {1}, Yaw: {2}".format(self.roll, self.pitch, self.yaw))
                     readSerialPort = False
         
@@ -99,8 +90,8 @@ class HandleIMUSerialData():
         self.parseSerialData()
         
         if self.roll and self.pitch and self.yaw:
-            imu.transform.RotateX(self.pitch)
-            imu.transform.RotateY(self.roll)
+            imu.transform.RotateX(self.roll)
+            imu.transform.RotateY(self.pitch)
             imu.transform.RotateZ(self.yaw)
             imu.transform.Update()
             
@@ -126,7 +117,7 @@ class KeyBoardInterrupt(vtk.vtkInteractorStyleTrackballCamera):
 
 def main():
     camera = vtk.vtkCamera()
-    camera.SetPosition(0, 0, 20)
+    camera.SetPosition(0, 0, 45)
     camera.SetFocalPoint(0, 0, 0)
     
     renderer = vtk.vtkRenderer()
@@ -140,6 +131,15 @@ def main():
     renderWindowInteractor = vtk.vtkRenderWindowInteractor()
     renderWindowInteractor.SetRenderWindow(renderWindow)
     renderWindowInteractor.Initialize()
+    
+    axes = vtk.vtkAxesActor()
+    orientation = vtk.vtkOrientationMarkerWidget()
+    orientation.SetOutlineColor(0.93, 0.57, 0.13)
+    orientation.SetOrientationMarker(axes)
+    orientation.SetInteractor(renderWindowInteractor)
+    orientation.SetViewport(0.0, 0.0, 0.4, 0.4)
+    orientation.SetEnabled(True)
+    orientation.InteractiveOn()
     
     handleIMUSerial = HandleIMUSerialData(renderer)
     style = KeyBoardInterrupt(handleIMUSerial)
