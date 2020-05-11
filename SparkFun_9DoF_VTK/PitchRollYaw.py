@@ -78,7 +78,13 @@ class HandleIMUSerialData():
                     
                     self.pitch = 180 * np.arctan2(accel[0][1], np.sqrt(accel[0][0]**2 + accel[0][2]**2)) / np.pi
                     self.roll = 180 * np.arctan2(accel[0][0], np.sqrt(accel[0][1]**2 + accel[0][2]**2)) / np.pi
-                    self.yaw = 180 * np.arctan2(-mag[0][1], mag[0][0]) / np.pi
+                    
+                    magX = mag[0][0]*np.cos(self.pitch) + \
+                           mag[0][1]*np.sin(self.roll)*np.sin(self.pitch) + \
+                           mag[0][2]*np.cos(self.roll)*np.sin(self.pitch)
+                    magY = mag[0][1]*np.cos(self.roll) - mag[0][2]*np.sin(self.roll)
+                    
+                    self.yaw = 180 * np.arctan2(-magX, magY) / np.pi
                                         
                     print("Roll: {0}, Pitch: {1}, Yaw: {2}".format(self.roll, self.pitch, self.yaw))
                     readSerialPort = False
