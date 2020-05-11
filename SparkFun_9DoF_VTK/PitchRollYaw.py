@@ -3,13 +3,34 @@ import vtk
 import serial
 import numpy as np
 
-
 class IMU():
-    def __init__(self, xLength=10, yLength=10, zLength=1):
-        self.imu = vtk.vtkCubeSource()
-        self.imu.SetXLength(xLength)
-        self.imu.SetYLength(yLength)
-        self.imu.SetZLength(zLength)
+    def __init__(self, xLength=10, yLength=10, zLength=0.1):
+        cube = vtk.vtkCubeSource()
+        cube.SetXLength(xLength)
+        cube.SetYLength(yLength)
+        cube.SetZLength(zLength)
+        cube.Update()
+        
+        arrow = vtk.vtkArrowSource()
+        arrow.SetTipResolution(6)
+        arrow.SetTipRadius(0.1)
+        arrow.SetTipLength(0.35)
+        arrow.SetShaftResolution(6)
+        arrow.SetShaftRadius(0.03)
+        arrow.Update()
+        
+        transform = vtk.vtkTransform()
+        transform.RotateY(-90)
+        transform.Update()
+        
+        transform_pdf = vtk.vtkTransformPolyDataFilter()
+        transform_pdf.SetInputData(arrow.GetOutput())
+        transform_pdf.SetTransform(transform)
+        transform_pdf.Update()
+        
+        self.imu = vtk.vtkAppendPolyData()
+        self.imu.AddInputData(cube.GetOutput())
+        self.imu.AddInputData(transform_pdf.GetOutput())
         self.imu.Update()
         
         self.transform = vtk.vtkTransform()
@@ -37,7 +58,7 @@ class HandleIMUSerialData():
         self.yaw = None
         
     def parseSerialData(self):
-        accel, gyro, mag = [], [], []
+        rpy = []
         readSerialPort = True
         
         if self.serial.is_open:
@@ -45,35 +66,16 @@ class HandleIMUSerialData():
                 b = self.serial.readline()
                 string = b.decode()
                 
-                if len(string.split("Accel:")) == 2:
+                if len(string.split("R/P/Y:")) == 2:
                     components = string.split(" ")
-                    accel.append([float(components[1].split(',')[0]),
-                                  float(components[2].split(',')[0]),
-                                  float(components[3].split(',')[0])])
-                
-                if len(string.split("Gyro:")) == 2:
-                    components = string.split(" ")
-                    gyro.append([float(components[1].split(',')[0]),
-                                 float(components[2].split(',')[0]),
-                                 float(components[3].split(',')[0])])
-                
-                if len(string.split("Mag:")) == 2:
-                    components = string.split(" ")
-                    mag.append([float(components[1].split(',')[0]),
+                    rpy.append([float(components[1].split(',')[0]),
                                 float(components[2].split(',')[0]),
-                                float(components[3].split(',')[0])])
+                                float(components[3].split('\r\n')[0])])
                 
-                if accel and gyro and mag:
-                    self.pitch = 180 * np.arctan2(accel[0][1], np.sqrt(accel[0][0]**2 + accel[0][2]**2)) / np.pi
-                    self.roll = 180 * np.arctan2(accel[0][0], np.sqrt(accel[0][1]**2 + accel[0][2]**2)) / np.pi
-                    
-                    magX = mag[0][0]*np.cos(self.pitch) + \
-                           mag[0][1]*np.sin(self.roll)*np.sin(self.pitch) + \
-                           mag[0][2]*np.cos(self.roll)*np.sin(self.pitch)
-                    magY = mag[0][1]*np.cos(self.roll) - mag[0][2]*np.sin(self.roll)
-                    
-                    self.yaw = 180 * np.arctan2(-magX, magY) / np.pi
-                                        
+                if rpy:
+                    self.roll = rpy[0][0]
+                    self.pitch = rpy[0][1]
+                    self.yaw = rpy[0][2]
                     print("Roll: {0}, Pitch: {1}, Yaw: {2}".format(self.roll, self.pitch, self.yaw))
                     readSerialPort = False
         
