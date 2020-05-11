@@ -3,10 +3,6 @@ import vtk
 import serial
 import numpy as np
 
-accel_offset = [-1.477229773462783, 0.3782006472491909, -0.3691974110032362]
-gyro_offset = [-169.23784466019418, 25.974271844660194, -31.406990291262137]
-mag_offset = [38.42743042071198, 6.023100323624595, -60.78293203883496]
-
 
 class IMU():
     def __init__(self, xLength=10, yLength=10, zLength=1):
@@ -68,14 +64,6 @@ class HandleIMUSerialData():
                                 float(components[3].split(',')[0])])
                 
                 if accel and gyro and mag:
-                    accel[0][0] /= accel_offset[0]
-                    accel[0][1] /= accel_offset[1]
-                    accel[0][2] /= accel_offset[2]
-                    
-                    mag[0][0] /= mag_offset[0]
-                    mag[0][1] /= mag_offset[1]
-                    mag[0][2] /= mag_offset[2]
-                    
                     self.pitch = 180 * np.arctan2(accel[0][1], np.sqrt(accel[0][0]**2 + accel[0][2]**2)) / np.pi
                     self.roll = 180 * np.arctan2(accel[0][0], np.sqrt(accel[0][1]**2 + accel[0][2]**2)) / np.pi
                     
