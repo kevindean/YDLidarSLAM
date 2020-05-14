@@ -1,6 +1,17 @@
 # PRELIMINARY RESULT
 ![Preliminary Test Result](https://github.com/kevindean/YDLidarSLAM/blob/1.2/PrelimarySLAM_onlyIMUOrientation.png)
 
+# Trying to Calibrate Magnetometer (graphs present 2d cuts from 3D space - xy, xy, yz)
+![Before Calibration](https://github.com/kevindean/YDLidarSLAM/blob/1.2/MagBeforeCal.png)
+
+# After attempted Calibration (graphs present 2d cuts from 3D space - xy, xy, yz)
+![After Calibration](https://github.com/kevindean/YDLidarSLAM/blob/1.2/MagAfterCal.png)
+
+# Scanning Myself
+![Me scanning myself from my laptop](https://github.com/kevindean/YDLidarSLAM/blob/1.2/SLAM_orientation_only_MAGCalibrated.png)
+
+# next I need to work on position tracking with the IMU and a neural network that will handle drift during accelerometer use.
+
 # YDLidarSLAM
 plan on utilizing openIMU300RI and YDLidar G2 to perform SLAM operations... this is the beginning
 
