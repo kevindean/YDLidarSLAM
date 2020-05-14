@@ -1,10 +1,10 @@
 # PRELIMINARY RESULT
 ![Preliminary Test Result](https://github.com/kevindean/YDLidarSLAM/blob/1.2/PrelimarySLAM_onlyIMUOrientation.png)
 
-# Trying to Calibrate Magnetometer (graphs present 2d cuts from 3D space - xy, xy, yz)
+# Trying to Calibrate Magnetometer (graphs present 2d cuts from 3D space - xy, xz, yz)
 ![Before Calibration](https://github.com/kevindean/YDLidarSLAM/blob/1.2/MagBeforeCal.png)
 
-# After attempted Calibration (graphs present 2d cuts from 3D space - xy, xy, yz)
+# After attempted Calibration (graphs present 2d cuts from 3D space - xy, xz, yz)
 ![After Calibration](https://github.com/kevindean/YDLidarSLAM/blob/1.2/MagAfterCal.png)
 
 # Scanning Myself
