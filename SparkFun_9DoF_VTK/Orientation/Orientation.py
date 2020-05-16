@@ -58,7 +58,6 @@ class HandleIMUSerialData():
         self.yaw = None
         
     def parseSerialData(self):
-        rpy = []
         readSerialPort = True
         
         if self.serial.is_open:
@@ -66,18 +65,12 @@ class HandleIMUSerialData():
                 b = self.serial.readline()
                 string = b.decode()
                 
-                if len(string.split("R/P/Y:")) == 2:
-                    components = string.split(" ")
-                    rpy.append([float(components[1].split(',')[0]),
-                                float(components[2].split(',')[0]),
-                                float(components[3].split('\r\n')[0])])
-                
-                if rpy:
-                    self.roll = rpy[0][0]
-                    self.pitch = rpy[0][1]
-                    self.yaw = rpy[0][2]
-                    print("Roll: {0}, Pitch: {1}, Yaw: {2}".format(self.roll, self.pitch, self.yaw))
-                    readSerialPort = False
+                components = string.split(", ")
+                self.roll = float(components[3])
+                self.pitch = float(components[4])
+                self.yaw = -float(components[5])
+                print("Roll: {0}, Pitch: {1}, Yaw: {2}".format(self.roll, self.pitch, self.yaw))
+                readSerialPort = False
         
     def execute(self, obj, event):
         imu = IMU()
