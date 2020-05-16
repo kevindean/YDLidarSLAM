@@ -3,6 +3,7 @@
 
 import os, sys
 import socket
+import serial
 import numpy as np
 import vtk
 
@@ -77,12 +78,12 @@ class HandleVTKCloud():
             
             if self.data_recvd:
                 self.cloudCount += 1
-                data = np.frombuffer(self.data_recvd).reshape(505, 4)
+                data = np.frombuffer(self.data_recvd).reshape(506, 4)
                 
                 intensity_scalars = vtk.vtkDoubleArray()
                 intensity_scalars.SetName("intensity")
                 
-                for i in data:
+                for i in data[0:505]:
                     pointCloud.vtkPoints.InsertNextPoint(i[0:3])
                     intensity_scalars.InsertNextValue(i[-1])
                 
@@ -91,6 +92,19 @@ class HandleVTKCloud():
                 
                 pointCloud.vtkVertex.SetInputData(pointCloud.vtkPolyData)
                 pointCloud.vtkVertex.Update()
+                
+                t = vtk.vtkTransform()
+                t.RotateX(data[-1][0])
+                t.RotateX(data[-1][1])
+                t.RotateX(data[-1][2])
+                t.Update()
+                
+                tf = vtk.vtkTransformPolyDataFilter()
+                tf.SetTransform(t)
+                tf.SetInputData(pointCloud.vtkVertex.GetOutput())
+                tf.Update()
+                
+                pointCloud.vtkVertex.GetOutput().DeepCopy(tf.GetOutput())
                 
                 if self.debug == True:
                     pointCloud.WriteData("./data/socket_cloud_{0}.vtp".format(str(self.cloudCount).zfill(4)), \
@@ -102,6 +116,8 @@ class HandleVTKCloud():
         finally:
             # clean up the connection
             connection.close()
+
+
 
 
 class KeyBoardInterrupt(vtk.vtkInteractorStyleTrackballCamera):
@@ -132,7 +148,7 @@ def main():
     renderWindowInteractor.SetRenderWindow(renderWindow)
     renderWindowInteractor.Initialize()
     
-    handleCloud = HandleVTKCloud(renderer, debug=False)
+    handleCloud = HandleVTKCloud(renderer, debug=True)
     style = KeyBoardInterrupt(handleCloud)
     renderWindowInteractor.SetInteractorStyle(style)
     renderWindowInteractor.AddObserver('TimerEvent', handleCloud.execute)
