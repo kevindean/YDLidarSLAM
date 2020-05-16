@@ -2,6 +2,7 @@ import os, sys
 import socket
 import numpy as np
 import time
+import serial
 import ydlidar
 
 class YdLidar():
@@ -33,8 +34,16 @@ class YdLidar():
         self.laser.turnOff()
         self.laser.disconnecting()
 
+def parseIMUSerialPort(string):
+    components = string.split(", ")
+    roll = float(components[3])
+    pitch = float(components[4])
+    yaw = -float(components[5])
+    return roll, pitch, yaw
+
 def main(maxScans=1000, serial_port="/dev/ydlidar", address='localhost', port=10000):
     Laser = YdLidar(serial_port=serial_port)
+    IMU = serial.Serial(port="/dev/ttyACM0", baudrate=230400)
     
     ret = Laser.laser.initialize()
     if ret:
@@ -48,6 +57,7 @@ def main(maxScans=1000, serial_port="/dev/ydlidar", address='localhost', port=10
         curScanIndex = 0
         while ret and ydlidar.os_isOk() and curScanIndex <= maxScans:
             r = Laser.laser.doProcessSimple(scan)
+            roll, pitch, yaw = parseIMUSerialPort(IMU.readline().decode())
             
             if r:
                 pts = []
@@ -60,6 +70,8 @@ def main(maxScans=1000, serial_port="/dev/ydlidar", address='localhost', port=10
                     # append calculated points to the pts list
                     pts.append([x, y, z, intensity])
                 
+                # 0 represents place holder for intensity (because there isn't any)
+                pts.append([roll, pitch, yaw, 0])
                 socketMessage = np.asarray(pts)
                 
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -72,7 +84,6 @@ def main(maxScans=1000, serial_port="/dev/ydlidar", address='localhost', port=10
                 except (TimeoutError, ConnectionRefusedError) as e:
                     print("Terminating\nClosing Socket")
                     sock.close()
-                    
                     print("Turning Off Laser")
                     Laser.StopScanning()
                     
