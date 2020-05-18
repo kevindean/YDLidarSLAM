@@ -1,3 +1,5 @@
+![Scanning part of Me Torso (top to bottom)](https://github.com/kevindean/YDLidarSLAM/blob/1.3/YDLidar-ME.png)
+
 # PRELIMINARY RESULT
 ![Preliminary Test Result](https://github.com/kevindean/YDLidarSLAM/blob/1.2/PrelimarySLAM_onlyIMUOrientation.png)
 
