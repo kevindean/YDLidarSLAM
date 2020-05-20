@@ -64,7 +64,8 @@ def main(maxScans=1000, serial_port="/dev/ydlidar", address='localhost', port=10
                 for point in scan.points:
                     x = point.range * np.cos(point.angle)
                     y = point.range * np.sin(point.angle)
-                    z = 0.0
+                    z = 0.0 # since I now have roll pitch and yaw, I am currently working the conversion to get height for
+                            # the proper z location since you haved a 3rd dimension to worry about.
                     intensity = point.intensity
                     
                     # append calculated points to the pts list
